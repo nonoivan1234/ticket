@@ -27,8 +27,4 @@ params = {
 }
 url = 'https://ticket.com.tw/Application/UTK02/UTK0201_.aspx?PRODUCT_ID=N0VQ76BZ'
 
-r = requests.post(url, data = params)
-print(r.text)
-quit
-soup = BeautifulSoup(r.text,'html.parser')
-print(soup.prettify())
+r = requests.post(url, params = params)
