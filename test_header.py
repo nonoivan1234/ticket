@@ -16,9 +16,25 @@ with open('chk_pic\\'+'1.jpg','wb') as file:
     file.write(img.content)
 
 chk = input()
-
+headers = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Host': 'ticket.com.tw',
+    'Origin': 'https://ticket.com.tw',
+    'Referer': 'https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTGVMM&PRODUCT_ID=N0VQ76BZ',
+    'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
+    'sec-ch-ua-mobile': '?0',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36'
+}
 with requests.Session() as s:
-	page = s.get('https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTGVMM&PRODUCT_ID=N0VQ76BZ')
+	page = s.post('https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTGVMM&PRODUCT_ID=N0VQ76BZ', headers = headers)
 	soup = BeautifulSoup(page.content, 'html.parser')
 
 	payload_loginPage = {
@@ -69,6 +85,6 @@ with requests.Session() as s:
 	payload_loginPage["__VIEWSTATE"] = soup.select_one("#__VIEWSTATE")["value"]
 	payload_loginPage["__VIEWSTATEGENERATOR"] = soup.select_one("#__VIEWSTATEGENERATOR")["value"]
 	payload_loginPage["__EVENTVALIDATION"] = soup.select_one("#__EVENTVALIDATION")["value"]
-	s.post('https://ticket.com.tw/Application/UTK02/UTK0202_.aspx', data=payload_loginPage)
+	s.post('https://ticket.com.tw/Application/UTK02/UTK0202_.aspx', data=payload_loginPage, headers=headers)
  
 print(soup.prettify())
