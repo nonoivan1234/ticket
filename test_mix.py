@@ -15,7 +15,7 @@ d = input('Please enter the day. eg:28\n')
 # d = '31'
 tr = soup.find_all('tr')
 for i in tr:
-    l = i.find('time',{'datetime':y+'-'+m+'-'+d})
+    l = i.find('time',{'datetime' : y+'-'+m+'-'+d})
     if l != None:
         try:    
             pur_url = 'https://ticket.com.tw/application/UTK02/'+i.find('button').get('onclick')[26:-1]        
