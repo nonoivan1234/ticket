@@ -11,7 +11,7 @@ soup = BeautifulSoup(r.text,'html.parser')
 # d = input('Please enter the day. eg:28\n')
 y = '2021'
 m = '04'
-d = '10'
+d = '11'
 tr = soup.find_all('tr')
 for i in tr:
     l = i.find('time',{'datetime':y+'-'+m+'-'+d})
@@ -76,10 +76,7 @@ with requests.Session() as s:
         'ctl00$ContentPlaceHolder1$LOGIN_ID': 'A131892440',
         'ctl00$ContentPlaceHolder1$LOGIN_PWD': 'nono0627',
         'ctl00$ContentPlaceHolder1$CHK': chk,
-        '__ASYNCPOST': 'true',
-        '__EVENTTARGET':'', 
-        '__EVENTARGUMENT':'', 
-        '__LASTFOCUS':''
+        '__ASYNCPOST': 'true'
 	}
 
 	payload_loginPage["__VIEWSTATE"] = soup.select_one("#__VIEWSTATE")["value"]
