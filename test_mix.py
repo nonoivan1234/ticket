@@ -15,7 +15,7 @@ d = input('Please enter the day. eg:28\n')
 # d = '31'
 tr = soup.find_all('tr')
 for i in tr:
-    l = i.find('time',{'datetime' : y+'-'+m+'-'+d})
+    l = i.find('time',{'datetime':y+'-'+m+'-'+d})
     if l != None:
         try:    
             pur_url = 'https://ticket.com.tw/application/UTK02/'+i.find('button').get('onclick')[26:-1]        
@@ -26,7 +26,7 @@ for i in tr:
             quit()
 
 r = requests.get(pur_url)
-soup = BeautifulSoup(r.text,'lxml')
+soup = BeautifulSoup(r.text,'html.parser')
 chk_pic = soup.find('img',id = 'chk_pic')
 
 link = 'https://ticket.com.tw/'+chk_pic.get("src")

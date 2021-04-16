@@ -1,35 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-url = 'https://ticket.com.tw/Application/UTK02/UTK0201_00.aspx?PRODUCT_ID=N0VQ76BZ'
 
+url = 'https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTQ9DS&PRODUCT_ID=N0VQ76BZ'
 r = requests.get(url)
-soup = BeautifulSoup(r.text,'html.parser')
-
-# y = input('Please enter the year. eg:2021\n')
-# m = input('Please enter the month. eg:03\n')
-# d = input('Please enter the day. eg:28\n')
-y = '2021'
-m = '04'
-d = '11'
-tr = soup.find_all('tr')
-for i in tr:
-    l = i.find('time',{'datetime':y+'-'+m+'-'+d})
-    if l != None:
-        try:
-            pur_url = 'https://ticket.com.tw/application/UTK02/'+i.find('button').get('onclick')[26:-1] 
-            print('Get purchase website url.')
-        print(pur_url)
-        payload = {
-            'PERFORMANCE_ID':'N0VTGV3K',
-            'PRODUCT_ID': i.find('button').get('onclick')[75:-1]
-        }
-        print(payload)
-        break
-if l==None:
-    print("[Error] Can't find the asking date information. Please check the format of the date is correct or not.")
-
-r = requests.get(pur_url)
 soup = BeautifulSoup(r.text,'html.parser')
 chk_pic = soup.find('img',id = 'chk_pic')
 
@@ -51,8 +25,8 @@ headers = {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Host': 'ticket.com.tw',
     'Origin': 'https://ticket.com.tw',
-    'Referer': pur_url,
-    'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
+    'Referer': 'https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTQ9DS&PRODUCT_ID=N0VQ76BZ',
+    'sec-ch-ua': '"Google Chrome";v="89"',
     'sec-ch-ua-mobile': '?0',
     'Sec-Fetch-Dest': 'empty',
     'Sec-Fetch-Mode': 'cors',
@@ -60,7 +34,30 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36'
 }
 with requests.Session() as s:
+	page = s.post('https://ticket.com.tw/application/UTK02/UTK0202_.aspx?PERFORMANCE_ID=N0VTQ9DS&PRODUCT_ID=N0VQ76BZ', headers = headers)
+	soup = BeautifulSoup(page.content, 'html.parser')
+
 	payload_loginPage = {
+        'ctl00$ScriptManager1': 'ctl00$ContentPlaceHolder1$AjaxPanel|ctl00$ContentPlaceHolder1$AddShopingCart',
+        'ctl00$MASTER_S_ORDER_DATE':'' ,
+        'ctl00$MASTER_E_ORDER_DATE': '',
+        'ctl00$MASTER_ddlPG': '',
+        'ctl00$MASTER_ddlSelArea': '',
+        'ctl00$ContentPlaceHolder1$PERFORMANCE_ID': 'N0VTQ9DS',
+        'ctl00$ContentPlaceHolder1$PRODUCT_ID': 'N0VQ76BZ',
+        'ctl00$ContentPlaceHolder1$PLACE_ID': 'N0VR9RBR',
+        'ctl00$ContentPlaceHolder1$PRODUCT_CATEGORY_ID': '218',
+        'ctl00$ContentPlaceHolder1$SHOW_PLACE_MAP':'' ,
+        'ctl00$ContentPlaceHolder1$PERFORMANCE_PRICE_AREA_ID':'' ,
+        'ctl00$ContentPlaceHolder1$PACKAGE_ID':'' ,
+        'ctl00$ContentPlaceHolder1$ACTIVITY_GROUP_ID':'' ,
+        'ctl00$ContentPlaceHolder1$ACTIVITY_GROUP_ITEM_ID':'' ,
+        'ctl00$ContentPlaceHolder1$QUANTITY_LIMIT': '0',
+        'ctl00$ContentPlaceHolder1$IS_NONSEAT_USE_SERIALNO': 'N',
+        'ctl00$ContentPlaceHolder1$DOC_MEMO': '{"N0VTRZC7":"njPwzJM5amkk6GyQ+MIDUYPF+G81/aM02tGjEvUiJVsE7K7OjRQ5Ox2CtLzTDGXWDx61Ke1PeRc=","N0VTQ1PR":"MtNn6Fw8aVRt4mVIPwD7MI4/Wc8uiV10BoBiTa3VEfvMPLVhdw2XzS3aLrFEUAIZLOmv2Mky8i4=","N0VTRZC6":"njPwzJM5amkk6GyQ+MIDUYPF+G81/aM02tGjEvUiJVsE7K7OjRQ5Ox2CtLzTDGXWDx61Ke1PeRc="}',
+        'ctl00$ContentPlaceHolder1$ORGANIZATION_ID': 'N0176158',
+        'ctl00$ContentPlaceHolder1$PRICE': 'N0VTGVY4|1699',
+        'ctl00$ContentPlaceHolder1$PriceTypeList$ctl00$H_PKNO': 'N0VTGVYU',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl00$H_NAME': '原價',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl00$H_PRICE': '300.0000',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl00$PRICE_TEXT': '300',
@@ -70,6 +67,7 @@ with requests.Session() as s:
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl01$H_PRICE': '150.0000',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl01$PRICE_TEXT': '150',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl01$AMOUNT': '0',
+        'ctl00$ContentPlaceHolder1$PriceTypeList$ctl02$H_PKNO': 'N0VTGVYD',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl02$H_NAME': '身障陪同者',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl02$H_PRICE': '150.0000',
         'ctl00$ContentPlaceHolder1$PriceTypeList$ctl02$PRICE_TEXT': '150',
@@ -77,11 +75,16 @@ with requests.Session() as s:
         'ctl00$ContentPlaceHolder1$LOGIN_ID': 'A131892440',
         'ctl00$ContentPlaceHolder1$LOGIN_PWD': 'nono0627',
         'ctl00$ContentPlaceHolder1$CHK': chk,
-        '__ASYNCPOST': 'true'
+        'ctl00$ContentPlaceHolder1$AddShopingCart': '加入購物車，下一步',
+        '__ASYNCPOST': 'true',
+        '__EVENTTARGET':'', 
+        '__EVENTARGUMENT':'', 
+        '__LASTFOCUS':''
 	}
 
 	payload_loginPage["__VIEWSTATE"] = soup.select_one("#__VIEWSTATE")["value"]
 	payload_loginPage["__VIEWSTATEGENERATOR"] = soup.select_one("#__VIEWSTATEGENERATOR")["value"]
 	payload_loginPage["__EVENTVALIDATION"] = soup.select_one("#__EVENTVALIDATION")["value"]
-	s.post(pur_url, data=payload_loginPage, headers=headers)
+	s.post('https://ticket.com.tw/Application/UTK02/UTK0202_.aspx', data=payload_loginPage, headers=headers)
  
+print(soup.prettify())
