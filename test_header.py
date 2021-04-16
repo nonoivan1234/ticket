@@ -16,8 +16,9 @@ tr = soup.find_all('tr')
 for i in tr:
     l = i.find('time',{'datetime':y+'-'+m+'-'+d})
     if l != None:
-        print('Get purchase website url.')
-        pur_url = 'https://ticket.com.tw/application/UTK02/'+i.find('button').get('onclick')[26:-1]
+        try:
+            pur_url = 'https://ticket.com.tw/application/UTK02/'+i.find('button').get('onclick')[26:-1] 
+            print('Get purchase website url.')
         print(pur_url)
         payload = {
             'PERFORMANCE_ID':'N0VTGV3K',
