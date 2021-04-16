@@ -5,8 +5,6 @@ import time
 import requests
 from bs4 import BeautifulSoup
 import os
-from PIL import Image
-from io import BytesIO
  
 def input_ticket(element_name, to_enter):
     element_name.clear()
@@ -21,8 +19,8 @@ y = input('Please enter the year. eg:2021\n')
 m = input('Please enter the month. eg:03\n')
 d = input('Please enter the day. eg:28\n')
 # y = '2021'
-# m = '03'
-# d = '31'
+# m = '04'
+# d = '23'
 tr = soup.find_all('tr')
 for i in tr:
     l = i.find('time',{'datetime' : y+'-'+m+'-'+d})
@@ -40,18 +38,6 @@ options = Options()
 options.add_argument("--disable-notifications")
 chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
 chrome.get(pur_url)
-
-js="var q=document.documentElement.scrollTop=100000"  
-chrome.execute_script(js) 
-
-img = chrome.find_element_by_id('chk_pic')
-location = img.location
-size = img.size
-top,bottom,left,right = location['y'], location['y']+size['height'], location['x'], location['x']+size['width']
-screenshot = chrome.get_screenshot_as_png()
-screenshot = Image.open(BytesIO(screenshot))
-screenshot = screenshot.crop((left, top, right, bottom))
-screenshot.save('1.png')
 
 select = Select(chrome.find_element_by_name("ctl00$ContentPlaceHolder1$PRICE"))
 select.select_by_index(0)
