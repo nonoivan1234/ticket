@@ -21,12 +21,12 @@ url = 'https://ticket.com.tw/application/UTK02/UTK0201_00.aspx?PRODUCT_ID=N0VQ76
 r = requests.get(url)
 soup = BeautifulSoup(r.text,'html.parser')
 
-y = input('Please enter the year. eg:2021\n')
-m = input('Please enter the month. eg:03\n')
-d = input('Please enter the day. eg:28\n')
-# y = '2021'
-# m = '04'
-# d = '23'
+# y = input('Please enter the year. eg:2021\n')
+# m = input('Please enter the month. eg:03\n')
+# d = input('Please enter the day. eg:28\n')
+y = '2021'
+m = '04'
+d = '23'
 
 tr = soup.find_all('tr')
 for i in tr:
@@ -44,7 +44,7 @@ for i in tr:
  
 options = Options()
 options.add_argument("--disable-notifications")
-chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
+chrome = webdriver.Chrome(executable_path='./chromedriver', chrome_options=options)
 chrome.get(pur_url)
 
 # check picture download
@@ -63,31 +63,43 @@ chrome.minimize_window()
 select = Select(chrome.find_element_by_name("ctl00$ContentPlaceHolder1$PRICE"))
 select.select_by_index(0)
 
+# find every element
+
 original_ticket = chrome.find_element_by_id("ctl00_ContentPlaceHolder1_PriceTypeList_ctl00_AMOUNT")
 disabilities_ticket = chrome.find_element_by_id("ctl00_ContentPlaceHolder1_PriceTypeList_ctl01_AMOUNT")
 with_disabilities_ticket = chrome.find_element_by_id('ctl00_ContentPlaceHolder1_PriceTypeList_ctl02_AMOUNT')
-
-# enter the ticket amount
-
-original = input("請輸入原價票數 票價：200\n")
-disabilities = input("請輸入身心障礙者票數 票價：100\n")
-with_disabilities = input("請輸入身障陪同者票數 票價：100\n")
 
 chk_ = chrome.find_element_by_id("ctl00_ContentPlaceHolder1_CHK")
 identify = chrome.find_element_by_id("ctl00_ContentPlaceHolder1_LOGIN_ID")
 password = chrome.find_element_by_name("ctl00$ContentPlaceHolder1$LOGIN_PWD")
 btn = chrome.find_element_by_name("ctl00$ContentPlaceHolder1$AddShopingCart")
 
-chk = input("請輸入驗證碼\n")
+# check purchase successful or not
 
-# input and send the information
+while True:
+    # enter the ticket amount
 
-input_ticket(original_ticket, original)
-input_ticket(disabilities_ticket, disabilities)
-input_ticket(with_disabilities_ticket, with_disabilities)
-chk_.send_keys(chk)
-identify.send_keys(PASSWD['user-id'])
-password.send_keys(PASSWD['user-pass'])
-btn.click()
+    original = input("請輸入原價票數 票價：200\n")
+    disabilities = input("請輸入身心障礙者票數 票價：100\n")
+    with_disabilities = input("請輸入身障陪同者票數 票價：100\n")
+    chk = input("請輸入驗證碼\n")
+    
+    # input and send the information
+
+    input_ticket(original_ticket, original)
+    input_ticket(disabilities_ticket, disabilities)
+    input_ticket(with_disabilities_ticket, with_disabilities)
+    chk_.send_keys(chk)
+    identify.send_keys(PASSWD['user-id'])
+    password.send_keys(PASSWD['user-pass'])
+    btn.click()
+    
+    btn_chk = chrome.find_element_by_class_name('ui-dialog-buttonset')
+    try:
+        print('Purchase successful')
+        btn_chk.click()
+        break
+    except :
+        print('Failed to purchase please check the data.')
 
 time.sleep(15)
