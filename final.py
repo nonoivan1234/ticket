@@ -5,7 +5,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 import os
- 
+
 def input_ticket(element_name, to_enter):
     element_name.clear()
     element_name.send_keys(to_enter)
@@ -45,7 +45,6 @@ for i in tr:
 options = Options()
 options.add_argument("--disable-notifications")
 chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
-chrome.maximize_window()
 chrome.get(pur_url)
 
 # check picture download
@@ -53,9 +52,11 @@ chrome.get(pur_url)
 if not os.path.exists('chk_pic'):
     os.makedirs('chk_pic')
 
-with open('chk_pic\\'+'1.jpg','wb') as file:
+with open('chk_pic\\'+'chk.jpg','wb') as file:
     l = chrome.find_element_by_xpath('//*[@id="chk_pic"]')
     file.write(l.screenshot_as_png)
+    
+chrome.minimize_window()
 
 # select the seat option
 
