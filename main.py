@@ -12,33 +12,40 @@ def input_(element_name, to_enter):
     element_name.send_keys(to_enter)
     
 
-# get chk_pic and return driver
-def get_chk_pic(y, m, d): 
-    
+# get game status and return array includes dates, locations, prices, webs wach of the element is a array
+def get_status(): 
+    dates_locations_prices_webs = [[] for i in range (4)]
     # find the buting ticket website start
     url = 'https://ticket.com.tw/application/UTK02/UTK0201_00.aspx?PRODUCT_ID=N0VQ76BZ'
 
     r = requests.get(url)
     soup = BeautifulSoup(r.text,'html.parser')
-
+    temp = 0
     tr = soup.find_all('tr')
     for sub in tr:
-        temp = sub.find('time',{'datetime' : y+'-'+m+'-'+d})
-        if temp != None:
-            try:    
-                pur_url = 'https://ticket.com.tw/application/UTK02/'+sub.find('button').get('onclick')[26:-1]        
-                print('Get purchase website url.')
-                break
-            except :
-                print("[ERROR] Can't buy the asking date's ticket.")
-                quit()
-    else:
-        print("[ERROR] Can't find the asking date data.")
-        quit()
+        
+        if sub.find('time', {'class' : 'icon'}) != None:
+            dates_locations_prices_webs[0].append(sub.find('time', {'class' : 'icon'}).get('datetime'))
+            
+        if sub.find('span', {'id' : 'ctl00_ContentPlaceHolder1_PerformanceList_ctl0'+str(temp)+'_PLACE_NAME'}) != None:
+            dates_locations_prices_webs[1].append(sub.find('span', {'id' : 'ctl00_ContentPlaceHolder1_PerformanceList_ctl0'+str(temp)+'_PLACE_NAME'}).getText())
+            
+        if sub.find('span', {'id' : 'ctl00_ContentPlaceHolder1_PerformanceList_ctl0'+str(temp)+'_Label1'}) != None:
+            dates_locations_prices_webs[2].append(sub.find('span', {'id' : 'ctl00_ContentPlaceHolder1_PerformanceList_ctl0'+str(temp)+'_Label1'}).getText())
+            
+        if sub.find('button', {'class' : 'btn btn-event'}) != None:
+            dates_locations_prices_webs[3].append(sub.find('button', {'class' : 'btn btn-event'}).get('onclick')[26:-1])
+            temp += 1
+    
+    return dates_locations_prices_webs
 
+
+# get chk_pic and return driver    
+def get_chk_pic(pur_url):
     # open the buying ticket website
     options = Options()
     options.add_argument("--disable-notifications")
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
     chrome = webdriver.Chrome(executable_path='./chromedriver', chrome_options=options)
     chrome.get(pur_url)
 
